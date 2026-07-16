@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>
+Volunteer Knowledge Assistant
+</title>
+
+
+<style>
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f4f7;
+    margin: 0;
+}
+
+
+.container {
+
+    width: 700px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+
+}
+
+
+h1 {
+
+    text-align: center;
+    color: #333;
+
+}
+
+
+.section {
+
+    margin-top: 25px;
+    padding: 20px;
+    border-radius: 10px;
+    background: #f8f9fa;
+
+}
+
+
+button {
+
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+
+}
+
+
+button:hover {
+
+    background: #1d4ed8;
+
+}
+
+
+
+.chat {
+
+    height: 350px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+
+}
+
+
+.message {
+
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+
+}
+
+
+.user {
+
+    background: #dbeafe;
+
+}
+
+
+.assistant {
+
+    background: #dcfce7;
+
+}
+
+
+
+.chat-box {
+
+    display: flex;
+    margin-top: 15px;
+
+}
+
+
+
+.chat-box input {
+
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+
+}
+
+
+.chat-box button {
+
+    margin-left: 10px;
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1>
+📚 Volunteer Knowledge Assistant
+</h1>
+
+
+
+<div class="section">
+
+
+<h2>
+Upload PDF
+</h2>
+
+{% if upload_success %}
+
+<p style="color: green;">
+✅ PDF uploaded successfully!
+</p>
+
+{% endif %}
+
+<form
+action="/upload"
+method="POST"
+enctype="multipart/form-data"
+>
+
+
+<input
+type="file"
+name="file"
+accept=".pdf"
+required
+>
+
+
+<br><br>
+
+
+<button type="submit">
+Upload PDF
+</button>
+
+
+</form>
+
+
+</div>
+
+
+
+
+
+<div class="section">
+
+
+<h2>
+Ask Questions
+</h2>
+
+
+<div
+class="chat"
+id="chat"
+>
+
+
+<div class="message assistant">
+
+<b>Assistant:</b>
+
+<br>
+
+Upload a handbook and ask questions.
+
+</div>
+
+
+</div>
+
+
+
+<div class="chat-box">
+
+
+<input
+id="question"
+placeholder="Ask a question..."
+>
+
+
+<button onclick="askQuestion()">
+Send
+</button>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<script>
+
+
+async function askQuestion(){
+
+
+let input =
+document.getElementById("question");
+
+
+let question =
+input.value.trim();
+
+
+
+if(question === ""){
+    return;
+}
+
+
+
+let chat =
+document.getElementById("chat");
+
+
+
+chat.innerHTML += `
+
+<div class="message user">
+
+<b>You:</b>
+
+<br>
+
+${question}
+
+</div>
+
+`;
+
+
+
+input.value = "";
+
+
+
+let response =
+await fetch(
+"/ask",
+{
+
+method:"POST",
+
+headers:
+{
+"Content-Type":
+"application/x-www-form-urlencoded"
+},
+
+body:
+"question=" +
+encodeURIComponent(question)
+
+}
+);
+
+
+
+let answer =
+await response.text();
+
+
+
+chat.innerHTML += `
+
+<div class="message assistant">
+
+<b>Assistant:</b>
+
+<br>
+
+${answer}
+
+</div>
+
+`;
+
+
+
+chat.scrollTop =
+chat.scrollHeight;
+
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
