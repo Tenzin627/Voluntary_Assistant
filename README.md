@@ -94,7 +94,7 @@ Create a `.env` file:
 
 ```powershell
 New-Item .env -ItemType File
-
+```
 ```
 GROQ_API_KEY=your_api_key_here
 ```
