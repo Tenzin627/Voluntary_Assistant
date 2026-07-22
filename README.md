@@ -152,6 +152,10 @@ User Response
 - Cloud deployment
 
 ---
+---
+## License
+
+Educational and portfolio project.
 
 ## Author
 
